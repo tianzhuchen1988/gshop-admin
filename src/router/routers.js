@@ -129,6 +129,82 @@ export default [
     ]
   },
   {
+    path: '/order',
+    name: 'order',
+    meta: {
+      title: '订单管理',
+      icon: 'ios-book'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'order-list-page',
+        name: 'order-list-page',
+        meta: {
+          icon: 'md-download',
+          title: '订单列表'
+        },
+        component: () => import('@/view/order/order-list-page.vue')
+      },
+      {
+        path: 'refund-order-list-page',
+        name: 'refund-order-list-page',
+        meta: {
+          icon: 'md-download',
+          title: '退款订单列表'
+        },
+        component: () => import('@/view/order/refund-order-list-page.vue')
+      }
+    ]
+  },
+  {
+    path: '/system',
+    name: 'system',
+    meta: {
+      title: '系统管理',
+      icon: 'ios-book'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'admin',
+        name: 'admin',
+        meta: {
+          icon: 'md-download',
+          title: '管理员管理'
+        },
+        children: [
+          {
+            path: 'admin-add-page',
+            name: 'admin-add-page',
+            meta: {
+              icon: 'md-download',
+              title: '新增管理员'
+            },
+            component: () => import('@/view/system/system-admin-add-page.vue')
+          },
+          {
+            path: 'admin-list-page',
+            name: 'admin-list-page',
+            meta: {
+              icon: 'md-download',
+              title: '管理员列表'
+            },
+            component: () => import('@/view/system/system-admin-list-page.vue')
+          }
+        ]
+      },
+      {
+        path: 'role',
+        name: 'role',
+        meta: {
+          icon: 'md-download',
+          title: '角色管理'
+        }
+      }
+    ]
+  },
+  {
     path: '/error_logger',
     name: 'error_logger',
     meta: {
