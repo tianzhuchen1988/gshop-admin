@@ -1,22 +1,25 @@
 import axios from '@/libs/api.request'
 
 export const login = ({ userName, password }) => {
-  const data = {
-    userName,
-    password
-  }
   return axios.request({
-    url: 'login',
-    data,
+    headers: {
+      Authorization: 'Basic aW1vb2M6aW1vb2NzZWNyZXQ='
+    },
+    url: 'oauth/token',
+    params: {
+      grant_type: 'password',
+      username: userName,
+      password
+    },
     method: 'post'
   })
 }
 
 export const getUserInfo = (token) => {
   return axios.request({
-    url: 'get_info',
-    params: {
-      token
+    url: 'user/me',
+    headers: {
+      Authorization: 'bearer' + token
     },
     method: 'get'
   })
@@ -31,7 +34,7 @@ export const logout = (token) => {
 
 export const getUnreadCount = () => {
   return axios.request({
-    url: 'message/count',
+    url: 'hello/count',
     method: 'get'
   })
 }
