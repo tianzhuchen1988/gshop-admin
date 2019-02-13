@@ -113,9 +113,20 @@ export default [
         name: 'category-add-page',
         meta: {
           icon: 'md-add',
-          title: '新增/更新分类'
+          title: '新增分类',
+          hideInMenu: true
         },
-        component: () => import('@/view/category/category-add-page.vue')
+        component: () => import('@/view/category/category-edit-page.vue')
+      },
+      {
+        path: 'category-update-page',
+        name: 'category-update-page',
+        meta: {
+          icon: 'md-update',
+          title: '更新分类',
+          hideInMenu: true
+        },
+        component: () => import('@/view/category/category-edit-page.vue')
       },
       {
         path: 'category-list-page',

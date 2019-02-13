@@ -6,8 +6,8 @@
             <Input placeholder="请输入分类名称" clearable></Input>
           </FormItem>
           <FormItem label="分类等级：">
-            <Select v-model="model1" style="width:200px">
-              <Option v-for="item in cityList" :value="item.value" :key="item.value">{{ item.label }}</Option>
+            <Select v-model="model1" style="width:200px" clearable>
+              <Option v-for="item in levelList" :value="item.levelCode" :key="item.levelName">{{ item.levelName }}</Option>
             </Select>
           </FormItem>
           <Button type="primary" icon="ios-search">搜索</Button>
@@ -19,41 +19,28 @@
         <div style="float: right;">
           <Page :total="100" :current="1" @on-change="changePage"></Page>
         </div>
+        <div style="float: left;">
+          <Button type="primary">新增</Button>&nbsp;&nbsp;&nbsp;
+          <Button type="primary">导出</Button>
+        </div>
       </div>
     </Card>
   </div>
 </template>
 
 <script>
+  import {categoryLevelList} from '@/api/category'
   export default {
+    mounted(){
+      categoryLevelList().then(res => {
+        if(res.data.code === 0){
+          this.levelList = res.data.data;
+        }
+      })
+    },
     data () {
       return {
-        cityList: [
-          {
-            value: 'New York',
-            label: 'New York'
-          },
-          {
-            value: 'London',
-            label: 'London'
-          },
-          {
-            value: 'Sydney',
-            label: 'Sydney'
-          },
-          {
-            value: 'Ottawa',
-            label: 'Ottawa'
-          },
-          {
-            value: 'Paris',
-            label: 'Paris'
-          },
-          {
-            value: 'Canberra',
-            label: 'Canberra'
-          }
-        ],
+        levelList: [],
         model1: '',
         tableData1: this.mockTableData1(),
         tableColumns1: [
@@ -164,7 +151,7 @@
                     click: () => {
                       const id = parseInt(Math.random() * 100000)
                       const route = {
-                        name: 'category-add-page',
+                        name: 'category-update-page',
                         query: {
                           id
                         },
