@@ -113,7 +113,7 @@ export default [
         name: 'category-add-page',
         meta: {
           icon: 'md-add',
-          title: '新增分类'
+          title: '新增/更新分类'
         },
         component: () => import('@/view/category/category-add-page.vue')
       },
