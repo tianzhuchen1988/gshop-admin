@@ -1,6 +1,7 @@
 import axios from 'axios'
 import {getToken} from '@/libs/util'
 // import { Spin } from 'iview'
+import iView from 'iview'
 const addErrorLog = errorInfo => {
   const { statusText, status, request: { responseURL } } = errorInfo
   let info = {
@@ -52,7 +53,11 @@ class HttpRequest {
       return { data, status }
     }, error => {
       this.destroy(url)
-      console.log(error);
+      iView.Message.error("服务器内部异常")
+      //如果为401状态码时，需要刷新令牌，refresh_token过期后，需重定向到登录页
+      if(error.response.status === 401){
+        console.log('令牌无效');
+      }
       return Promise.reject(error)
     })
   }
