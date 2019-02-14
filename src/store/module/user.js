@@ -1,6 +1,7 @@
 import {
   login,
   logout,
+  doRefreshToken,
   getUserInfo,
   getMessage,
   getContentByMsgId,
@@ -9,7 +10,8 @@ import {
   restoreTrash,
   getUnreadCount
 } from '@/api/user'
-import { setToken, getToken } from '@/libs/util'
+import { setToken, setRefreshToken, getToken, getRefreshToken } from '@/libs/util'
+import iView from 'iview'
 
 export default {
   state: {
@@ -17,6 +19,7 @@ export default {
     userId: '',
     avatorImgPath: '',
     token: getToken(),
+    refreshToken: getRefreshToken(),
     access: '',
     hasGetInfo: false,
     unreadCount: 0,
@@ -41,6 +44,10 @@ export default {
     setToken (state, token) {
       state.token = token
       setToken(token)
+    },
+    setRefreshToken (state, refreshToken) {
+      state.refreshToken = refreshToken
+      setRefreshToken(refreshToken)
     },
     setHasGetInfo (state, status) {
       state.hasGetInfo = status
@@ -83,7 +90,23 @@ export default {
         }).then(res => {
           const data = res.data
           commit('setToken', data.access_token)
+          commit('setRefreshToken', data.refresh_token)
           resolve()
+        }).catch(err => {
+          iView.Message.error("用户名或密码错误")
+          reject(err)
+        })
+      })
+    },
+    // 刷新令牌
+    handleRefreshToken ({ commit }, refreshToken) {
+      return new Promise((resolve, reject) => {
+        doRefreshToken(refreshToken).then(res => {
+          console.log('刷新令牌成功');
+          const data = res.data
+          commit('setToken', data.access_token)
+          commit('setRefreshToken', data.refresh_token)
+          resolve(data.access_token)
         }).catch(err => {
           reject(err)
         })
@@ -101,6 +124,7 @@ export default {
         })*/
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
         commit('setToken', '')
+        commit('setRefreshToken', '')
         commit('setAccess', [])
         resolve()
       })

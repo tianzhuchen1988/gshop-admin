@@ -15,9 +15,24 @@ export const login = ({ userName, password }) => {
   })
 }
 
+//刷新令牌
+export const doRefreshToken = (refreshToken) => {
+  return axios.request({
+    headers: {
+      Authorization: 'Basic aW1vb2M6aW1vb2NzZWNyZXQ='
+    },
+    url: '/oauth/token',
+    params: {
+      grant_type: 'refresh_token',
+      refresh_token: refreshToken
+    },
+    method: 'post'
+  })
+}
+
 export const getUserInfo = (token) => {
   return axios.request({
-    url: 'user/me',
+    url: '/user/me',
     headers: {
       Authorization: 'bearer' + token
     },
@@ -34,7 +49,7 @@ export const logout = (token) => {
 
 export const getUnreadCount = () => {
   return axios.request({
-    url: 'hello/count',
+    url: '/hello/count',
     method: 'get'
   })
 }
