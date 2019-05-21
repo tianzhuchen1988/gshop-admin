@@ -3,7 +3,7 @@ import axios from '@/libs/api.request'
 export const login = ({ userName, password }) => {
   return axios.request({
     headers: {
-      Authorization: 'Basic aW1vb2M6aW1vb2NzZWNyZXQ='
+      Authorization: 'Basic Z290c2hvcDpnb3RzaG9wc2VjcmV0'
     },
     url: 'oauth/token',
     params: {
@@ -15,11 +15,11 @@ export const login = ({ userName, password }) => {
   })
 }
 
-//刷新令牌
+// 刷新令牌
 export const doRefreshToken = (refreshToken) => {
   return axios.request({
     headers: {
-      Authorization: 'Basic aW1vb2M6aW1vb2NzZWNyZXQ='
+      Authorization: 'Basic Z290c2hvcDpnb3RzaG9wc2VjcmV0='
     },
     url: '/oauth/token',
     params: {
@@ -34,7 +34,7 @@ export const getUserInfo = (token) => {
   return axios.request({
     url: '/user/me',
     headers: {
-      Authorization: 'bearer' + token
+      Authorization: 'Bearer ' + token
     },
     method: 'get'
   })
