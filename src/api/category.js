@@ -1,20 +1,12 @@
 import axios from '@/libs/api.request'
 
-export const categoryLevelList = () => {
-  return axios.request({
-    url: 'levelList',
-    method: 'get'
-  });
-}
-
 export const categoryList = (page, size) => {
   return axios.request({
-    url: 'list',
-    method: 'post',
+    url: '/back/category',
+    method: 'get',
     params: {
       page: page,
-      size: size,
-      categoryName: 'abc'
+      size: size
     }
-  });
+  })
 }

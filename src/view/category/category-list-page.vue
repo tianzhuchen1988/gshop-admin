@@ -6,7 +6,7 @@
             <Input placeholder="请输入分类名称" clearable></Input>
           </FormItem>
           <FormItem label="分类等级：">
-            <Select v-model="model1" style="width:200px" clearable>
+            <Select style="width:200px" clearable>
               <Option v-for="item in levelList" :value="item.levelCode" :key="item.levelName">{{ item.levelName }}</Option>
             </Select>
           </FormItem>
@@ -17,7 +17,7 @@
       <Table :data="tableData1" :columns="tableColumns1" stripe></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
-          <Page :total="totalSize" :current="1" :page-size="10" @on-change="changePage"></Page>
+          <Page :total="totalSize" :current="1" :page-size="pageSize" @on-change="changePage"></Page>
         </div>
         <div style="float: left;">
           <Button type="primary">新增</Button>&nbsp;&nbsp;&nbsp;
@@ -29,104 +29,119 @@
 </template>
 
 <script>
-  import {categoryLevelList, categoryList} from '@/api/category'
-  export default {
-    mounted(){
-      categoryLevelList().then(res => {
-        if(res.data.code === 0){
-          this.levelList = res.data.data
-        }
-      });
-      categoryList(1, 10).then(res => {
-        if(res.data.code === 0){
-          this.tableData1 = res.data.data.content
-          this.totalSize = res.data.data.totalElements
-        }
-      });
-    },
-    data () {
-      return {
-        levelList: [],
-        model1: '',
-        tableData1: [],
-        totalSize: 0,
-        tableColumns1: [
-          {
-            title: 'id',
-            key: 'id'
-          },
-          {
-            title: 'categoryName',
-            key: 'categoryName'
-          },
-          {
-            title: 'categoryStatus',
-            key: 'categoryStatus'
-          },
-          {
-            title: 'Action',
-            key: 'action',
-            width: 150,
-            align: 'center',
-            render: (h, params) => {
-              return h('div', [
-                h('Button', {
-                  props: {
-                    type: 'primary',
-                    size: 'small'
-                  },
-                  style: {
-                    marginRight: '5px'
-                  },
-                  on: {
-                    click: () => {
-                      const id = parseInt(Math.random() * 100000)
-                      const route = {
-                        name: 'category-update-page',
-                        query: {
-                          id
-                        },
-                        meta: {
-                          title: `参数-${id}`
-                        }
+import { categoryList } from '@/api/category'
+import iView from 'iview'
+export default {
+  mounted () {
+    this.levelList = [{ levelCode: 0, levelName: '父级' }, { levelCode: 1, levelName: '子级' }]
+    categoryList(1, this.pageSize).then(res => {
+      if (res.data.code === 0) {
+        this.tableData1 = res.data.data.content
+        this.totalSize = res.data.data.totalElements
+      } else {
+        iView.Message.error(res.data.msg)
+      }
+    })
+  },
+  data () {
+    return {
+      levelList: [],
+      model1: '',
+      tableData1: [],
+      totalSize: 0,
+      pageSize: 1,
+      tableColumns1: [
+        {
+          title: '分类id',
+          key: 'id'
+        },
+        {
+          title: '分类名称',
+          key: 'categoryName'
+        },
+        {
+          title: '分类排序码',
+          key: 'sortOrder'
+        },
+        {
+          title: '创建时间',
+          key: 'createTime',
+          render: (h, params) => {
+            return h('div', this.formatDate(this.tableData1[params.index].createTime))
+          }
+        },
+        {
+          title: '更新时间',
+          key: 'updateTime',
+          render: (h, params) => {
+            return h('div', this.formatDate(this.tableData1[params.index].updateTime))
+          }
+        },
+        {
+          title: '操作',
+          key: 'action',
+          width: 150,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'primary',
+                  size: 'small'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    const id = parseInt(Math.random() * 100000)
+                    const route = {
+                      name: 'category-update-page',
+                      query: {
+                        id
+                      },
+                      meta: {
+                        title: `参数-${id}`
                       }
-                      this.$router.push(route)
                     }
+                    this.$router.push(route)
                   }
-                }, '编辑'),
-                h('Button', {
-                  props: {
-                    type: 'error',
-                    size: 'small'
-                  },
-                  on: {
-                    click: () => {
-                      this.remove(params.index)
-                    }
+                }
+              }, '编辑'),
+              h('Button', {
+                props: {
+                  type: 'error',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.index)
                   }
-                }, '删除')
-              ]);
-            }
+                }
+              }, '删除')
+            ])
           }
-        ]
-      }
+        }
+      ]
+    }
+  },
+  methods: {
+    formatDate (timestamp) {
+      const date = new Date(timestamp)
+      const y = date.getFullYear()
+      let m = date.getMonth() + 1
+      m = m < 10 ? '0' + m : m
+      let d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      return y + '-' + m + '-' + d
     },
-    methods: {
-      formatDate (date) {
-        const y = date.getFullYear();
-        let m = date.getMonth() + 1;
-        m = m < 10 ? '0' + m : m;
-        let d = date.getDate();
-        d = d < 10 ? ('0' + d) : d;
-        return y + '-' + m + '-' + d;
-      },
-      changePage (curPage) {
-        categoryList(curPage, 10).then(res => {
-          if(res.data.code === 0){
-            this.tableData1 = res.data.data.content
-          }
-        })
-      }
+    changePage (curPage) {
+      categoryList(curPage, this.pageSize).then(res => {
+        if (res.data.code === 0) {
+          this.tableData1 = res.data.data.content
+        }
+      })
     }
   }
+}
 </script>
