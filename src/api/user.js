@@ -5,9 +5,8 @@ export const login = ({ userName, password }) => {
     headers: {
       Authorization: 'Basic Z290c2hvcDpnb3RzaG9wc2VjcmV0'
     },
-    url: 'oauth/token',
+    url: 'authentication/form',
     params: {
-      grant_type: 'password',
       username: userName,
       password
     },

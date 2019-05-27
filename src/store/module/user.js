@@ -1,6 +1,5 @@
 import {
   login,
-  logout,
   doRefreshToken,
   getUserInfo,
   getMessage,
@@ -17,11 +16,11 @@ export default {
   state: {
     userName: '',
     userId: '',
-    avatorImgPath: '',
+    // avatorImgPath: '',
     token: getToken(),
     refreshToken: getRefreshToken(),
     access: '',
-    hasGetInfo: false,
+    // hasGetInfo: false,
     unreadCount: 0,
     messageUnreadList: [],
     messageReadedList: [],
@@ -29,9 +28,6 @@ export default {
     messageContentStore: {}
   },
   mutations: {
-    setAvator (state, avatorPath) {
-      state.avatorImgPath = avatorPath
-    },
     setUserId (state, id) {
       state.userId = id
     },
@@ -48,9 +44,6 @@ export default {
     setRefreshToken (state, refreshToken) {
       state.refreshToken = refreshToken
       setRefreshToken(refreshToken)
-    },
-    setHasGetInfo (state, status) {
-      state.hasGetInfo = status
     },
     setMessageCount (state, count) {
       state.unreadCount = count
@@ -88,12 +81,16 @@ export default {
           userName,
           password
         }).then(res => {
-          const data = res.data
-          commit('setToken', data.access_token)
-          commit('setRefreshToken', data.refresh_token)
+          const responseBody = res.data
+          if (responseBody.code !== 0) {
+            iView.Message.error(responseBody.msg)
+            return
+          }
+          commit('setToken', responseBody.data.access_token)
+          commit('setRefreshToken', responseBody.data.refresh_token)
           resolve()
         }).catch(err => {
-          iView.Message.error("用户名或密码错误")
+          iView.Message.error('用户名或密码错误')
           reject(err)
         })
       })
@@ -102,7 +99,7 @@ export default {
     handleRefreshToken ({ commit }, refreshToken) {
       return new Promise((resolve, reject) => {
         doRefreshToken(refreshToken).then(res => {
-          console.log('刷新令牌成功');
+          console.log('刷新令牌成功')
           const data = res.data
           commit('setToken', data.access_token)
           commit('setRefreshToken', data.refresh_token)
@@ -115,13 +112,13 @@ export default {
     // 退出登录
     handleLogOut ({ state, commit }) {
       return new Promise((resolve, reject) => {
-        /*logout(state.token).then(() => {
+        /* logout(state.token).then(() => {
           commit('setToken', '')
           commit('setAccess', [])
           resolve()
         }).catch(err => {
           reject(err)
-        })*/
+        }) */
         // 如果你的退出登录无需请求接口，则可以直接使用下面三行代码而无需使用logout调用接口
         commit('setToken', '')
         commit('setRefreshToken', '')
@@ -134,13 +131,13 @@ export default {
       return new Promise((resolve, reject) => {
         try {
           getUserInfo(state.token).then(res => {
-            const data = res.data
-            commit('setAvator', data.avator)
-            commit('setUserName', data.name)
-            commit('setUserId', data.user_id)
-            commit('setAccess', data.access)
-            commit('setHasGetInfo', true)
-            resolve(data)
+            const responseBody = res.data
+            // commit('setAvator', data.avator)
+            commit('setUserName', responseBody.data.username)
+            commit('setUserId', responseBody.data.id)
+            // commit('setAccess', data.access)
+            // commit('setHasGetInfo', true)
+            resolve(responseBody)
           }).catch(err => {
             reject(err)
           })
