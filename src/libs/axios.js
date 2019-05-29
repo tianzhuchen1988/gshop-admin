@@ -1,5 +1,5 @@
 import axios from 'axios'
-import {getToken, getRefreshToken} from '@/libs/util'
+import { getToken, getRefreshToken } from '@/libs/util'
 // import { Spin } from 'iview'
 import iView from 'iview'
 import store from '@/store'
@@ -21,12 +21,13 @@ class HttpRequest {
     this.queue = {}
   }
   getInsideConfig () {
-    const token = getToken();
+    const token = getToken()
     const config = {
       baseURL: this.baseUrl,
-      //每次请求中，都添加token头
+      // 每次请求中，都添加token头
       headers: {
-        Authorization: 'bearer' + (token ? token : '')
+        Authorization: 'bearer' + (token || ''),
+        'Content-Type': 'application/json'
       }
     }
     return config
@@ -56,17 +57,17 @@ class HttpRequest {
       return { data, status }
     }, error => {
       this.destroy(url)
-      //如果为401状态码时，需要刷新令牌，refresh_token过期后，需重定向到登录页
-      if(error.response.status === 401){
-        //刷新令牌
+      // 如果为401状态码时，需要刷新令牌，refresh_token过期后，需重定向到登录页
+      if (error.response.status === 401) {
+        // 刷新令牌
         store.dispatch('handleRefreshToken', getRefreshToken()).then(res => {
           error.config.headers.Authorization = 'bearer' + res
           return axios(error.config)
         }).catch(err => {
-          //刷新令牌失败时，重定向到登录页
-          iView.Message.error("令牌已过期，请重新授权登录")
+          // 刷新令牌失败时，重定向到登录页
+          iView.Message.error('令牌已过期，请重新授权登录')
           store.dispatch('handleLogOut')
-          router.replace({name: 'login'})
+          router.replace({ name: 'login' })
         })
       }
       return Promise.reject(error)

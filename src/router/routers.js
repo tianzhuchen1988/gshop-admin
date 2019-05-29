@@ -1,5 +1,4 @@
 import Main from '@/components/main'
-import parentView from '@/components/parent-view'
 
 /**
  * iview-admin中meta除了原生参数外可配置的参数:
@@ -113,8 +112,7 @@ export default [
         name: 'category-add-page',
         meta: {
           icon: 'md-add',
-          title: '新增分类',
-          hideInMenu: true
+          title: '新增分类'
         },
         component: () => import('@/view/category/category-edit-page.vue')
       },

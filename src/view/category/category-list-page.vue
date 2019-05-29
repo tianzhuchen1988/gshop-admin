@@ -3,14 +3,14 @@
     <Card>
         <Form ref="formInline" inline label-position="left" :label-width="80">
           <FormItem label="分类名称：">
-            <Input placeholder="请输入分类名称" clearable></Input>
+            <Input placeholder="请输入分类名称" v-model="categoryName" clearable></Input>
           </FormItem>
-          <FormItem label="分类等级：">
+          <!--<FormItem label="分类等级：">
             <Select style="width:200px" clearable>
               <Option v-for="item in levelList" :value="item.levelCode" :key="item.levelName">{{ item.levelName }}</Option>
             </Select>
-          </FormItem>
-          <Button type="primary" icon="ios-search">搜索</Button>
+          </FormItem>-->
+          <Button type="primary" icon="ios-search" @click="changePage(1)">搜索</Button>
         </Form>
     </Card>
     <Card>
@@ -20,7 +20,7 @@
           <Page :total="totalSize" :current="1" :page-size="pageSize" @on-change="changePage"></Page>
         </div>
         <div style="float: left;">
-          <Button type="primary">新增</Button>&nbsp;&nbsp;&nbsp;
+          <Button type="primary" @click="toAddPage()">新增</Button>&nbsp;&nbsp;&nbsp;
           <Button type="primary">导出</Button>
         </div>
       </div>
@@ -30,16 +30,15 @@
 
 <script>
 import { categoryList } from '@/api/category'
-import iView from 'iview'
 export default {
   mounted () {
     this.levelList = [{ levelCode: 0, levelName: '父级' }, { levelCode: 1, levelName: '子级' }]
-    categoryList(1, this.pageSize).then(res => {
+    categoryList(1, this.pageSize, this.categoryName).then(res => {
       if (res.data.code === 0) {
         this.tableData1 = res.data.data.content
         this.totalSize = res.data.data.totalElements
       } else {
-        iView.Message.error(res.data.msg)
+        this.$Message.error(res.data.msg)
       }
     })
   },
@@ -47,9 +46,10 @@ export default {
     return {
       levelList: [],
       model1: '',
+      categoryName: '',
       tableData1: [],
       totalSize: 0,
-      pageSize: 1,
+      pageSize: 10,
       tableColumns1: [
         {
           title: '分类id',
@@ -94,7 +94,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    const id = parseInt(Math.random() * 100000)
+                    const id = this.tableData1[params.index].id
                     const route = {
                       name: 'category-update-page',
                       query: {
@@ -136,11 +136,14 @@ export default {
       return y + '-' + m + '-' + d
     },
     changePage (curPage) {
-      categoryList(curPage, this.pageSize).then(res => {
+      categoryList(curPage, this.pageSize, this.categoryName).then(res => {
         if (res.data.code === 0) {
           this.tableData1 = res.data.data.content
         }
       })
+    },
+    toAddPage () {
+      this.$router.push({ name: 'category-add-page' })
     }
   }
 }
