@@ -26,13 +26,23 @@
   </div>
 </template>
 <script>
-import { categoryAdd } from '@/api/category'
+import { categorySave, categoryOne } from '@/api/category'
 export default {
   mounted () {
-    // console.log(this.$route.query.id)
+    if (!this.$route.query.id) return
+    this.categoryId = this.$route.query.id
+    categoryOne(this.$route.query.id).then(res => {
+      if (res.data.code === 0) {
+        this.formValidate.categoryName = res.data.data.categoryName
+        this.formValidate.sortOrder = res.data.data.sortOrder.toString()
+      } else {
+        this.$Message.error(res.data.msg)
+      }
+    })
   },
   data () {
     return {
+      categoryId: 0,
       formValidate: {
         categoryName: '',
         sortOrder: ''
@@ -51,7 +61,7 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          categoryAdd(this.formValidate.categoryName, this.formValidate.sortOrder).then(res => {
+          categorySave(this.categoryId, this.formValidate.categoryName, this.formValidate.sortOrder).then(res => {
             if (res.data.code === 0) {
               this.$Message.success('操作成功!')
               this.$router.push({ name: 'category-list-page' })

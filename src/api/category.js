@@ -12,10 +12,35 @@ export const categoryList = (page, size, categoryName) => {
   })
 }
 
-export const categoryAdd = (categoryName, sortOrder) => {
+export const categorySave = (categoryId, categoryName, sortOrder) => {
+  if (categoryId === 0) {
+    return axios.request({
+      url: '/back/category',
+      method: 'post',
+      data: JSON.stringify({ categoryName: categoryName, sortOrder: sortOrder })
+    })
+  } else {
+    return axios.request({
+      url: '/back/category',
+      method: 'post',
+      data: JSON.stringify({ id: categoryId, categoryName: categoryName, sortOrder: sortOrder })
+    })
+  }
+}
+
+export const categoryOne = (categoryId) => {
+  return axios.request({
+    url: '/back/category/' + categoryId,
+    method: 'get'
+  })
+}
+
+export const categoryDelete = (categoryId) => {
   return axios.request({
     url: '/back/category',
-    method: 'post',
-    data: JSON.stringify({ categoryName: categoryName, sortOrder: sortOrder })
+    method: 'delete',
+    params: {
+      id: categoryId
+    }
   })
 }

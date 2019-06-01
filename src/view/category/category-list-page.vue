@@ -29,7 +29,7 @@
 </template>
 
 <script>
-import { categoryList } from '@/api/category'
+import { categoryList, categoryDelete } from '@/api/category'
 export default {
   mounted () {
     this.levelList = [{ levelCode: 0, levelName: '父级' }, { levelCode: 1, levelName: '子级' }]
@@ -115,7 +115,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.remove(params.index)
+                    this.handleClickDelete(this.tableData1[params.index].id, params.index)
                   }
                 }
               }, '删除')
@@ -144,6 +144,16 @@ export default {
     },
     toAddPage () {
       this.$router.push({ name: 'category-add-page' })
+    },
+    handleClickDelete (id, index) {
+      categoryDelete(id).then(res => {
+        if (res.data.code === 0) {
+          this.$Message.success('操作成功')
+          this.changePage(1)
+        } else {
+          this.$Message.error(res.data.msg)
+        }
+      })
     }
   }
 }
