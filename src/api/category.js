@@ -12,20 +12,20 @@ export const categoryList = (page, size, categoryName) => {
   })
 }
 
-export const categorySave = (categoryId, categoryName, sortOrder) => {
-  if (categoryId === 0) {
-    return axios.request({
-      url: '/back/category',
-      method: 'post',
-      data: JSON.stringify({ categoryName: categoryName, sortOrder: sortOrder })
-    })
-  } else {
-    return axios.request({
-      url: '/back/category',
-      method: 'post',
-      data: JSON.stringify({ id: categoryId, categoryName: categoryName, sortOrder: sortOrder })
-    })
-  }
+export const categoryAdd = (categoryName, sortOrder) => {
+  return axios.request({
+    url: '/back/category',
+    method: 'put',
+    data: JSON.stringify({ categoryName: categoryName, sortOrder: sortOrder })
+  })
+}
+
+export const categoryUpdate = (categoryId, categoryName, sortOrder) => {
+  return axios.request({
+    url: '/back/category',
+    method: 'post',
+    data: JSON.stringify({ id: categoryId, categoryName: categoryName, sortOrder: sortOrder })
+  })
 }
 
 export const categoryOne = (categoryId) => {

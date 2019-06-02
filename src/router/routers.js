@@ -83,9 +83,20 @@ export default [
         name: 'product-add-page',
         meta: {
           icon: 'md-add',
-          title: '商品发布'
+          title: '新增商品',
+          hideInMenu: true
         },
-        component: () => import('@/view/product/product-add-page.vue')
+        component: () => import('@/view/product/product-edit-page.vue')
+      },
+      {
+        path: 'product-update-page',
+        name: 'product-update-page',
+        meta: {
+          icon: 'md-update',
+          title: '更新商品',
+          hideInMenu: true
+        },
+        component: () => import('@/view/product/product-edit-page.vue')
       },
       {
         path: 'product-list-page',
@@ -112,7 +123,8 @@ export default [
         name: 'category-add-page',
         meta: {
           icon: 'md-add',
-          title: '新增分类'
+          title: '新增分类',
+          hideInMenu: true
         },
         component: () => import('@/view/category/category-edit-page.vue')
       },

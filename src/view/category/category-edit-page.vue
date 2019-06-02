@@ -26,7 +26,7 @@
   </div>
 </template>
 <script>
-import { categorySave, categoryOne } from '@/api/category'
+import { categoryAdd, categoryUpdate, categoryOne } from '@/api/category'
 export default {
   mounted () {
     if (!this.$route.query.id) return
@@ -61,14 +61,26 @@ export default {
     handleSubmit (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          categorySave(this.categoryId, this.formValidate.categoryName, this.formValidate.sortOrder).then(res => {
-            if (res.data.code === 0) {
-              this.$Message.success('操作成功!')
-              this.$router.push({ name: 'category-list-page' })
-            } else {
-              this.$Message.error(res.data.msg)
-            }
-          })
+          if (this.categoryId === 0) {
+            // 新增
+            categoryAdd(this.formValidate.categoryName, this.formValidate.sortOrder).then(res => {
+              if (res.data.code === 0) {
+                this.$Message.success('操作成功!')
+                this.$router.push({ name: 'category-list-page' })
+              } else {
+                this.$Message.error(res.data.msg)
+              }
+            })
+          } else {
+            categoryUpdate(this.categoryId, this.formValidate.categoryName, this.formValidate.sortOrder).then(res => {
+              if (res.data.code === 0) {
+                this.$Message.success('操作成功!')
+                this.$router.push({ name: 'category-list-page' })
+              } else {
+                this.$Message.error(res.data.msg)
+              }
+            })
+          }
         }
       })
     },
