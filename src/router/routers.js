@@ -150,6 +150,46 @@ export default [
     ]
   },
   {
+    path: '/coupon',
+    name: 'coupon',
+    meta: {
+      title: '优惠券管理',
+      icon: 'ios-book'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'coupon-add-page',
+        name: 'coupon-add-page',
+        meta: {
+          icon: 'md-add',
+          title: '新增优惠券',
+          hideInMenu: true
+        },
+        component: () => import('@/view/coupon/coupon-edit-page.vue')
+      },
+      {
+        path: 'coupon-update-page',
+        name: 'coupon-update-page',
+        meta: {
+          icon: 'md-update',
+          title: '更新优惠券',
+          hideInMenu: true
+        },
+        component: () => import('@/view/coupon/coupon-edit-page.vue')
+      },
+      {
+        path: 'coupon-list-page',
+        name: 'coupon-list-page',
+        meta: {
+          icon: 'md-download',
+          title: '优惠券列表'
+        },
+        component: () => import('@/view/coupon/coupon-list-page.vue')
+      }
+    ]
+  },
+  {
     path: '/order',
     name: 'order',
     meta: {
