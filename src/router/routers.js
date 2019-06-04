@@ -150,6 +150,46 @@ export default [
     ]
   },
   {
+    path: '/messageType',
+    name: 'messageType',
+    meta: {
+      title: '消息类型管理',
+      icon: 'ios-book'
+    },
+    component: Main,
+    children: [
+      {
+        path: 'messageType-add-page',
+        name: 'messageType-add-page',
+        meta: {
+          icon: 'md-add',
+          title: '新增消息类型',
+          hideInMenu: true
+        },
+        component: () => import('@/view/messageType/messageType-edit-page.vue')
+      },
+      {
+        path: 'messageType-update-page',
+        name: 'messageType-update-page',
+        meta: {
+          icon: 'md-update',
+          title: '更新消息类型',
+          hideInMenu: true
+        },
+        component: () => import('@/view/messageType/messageType-edit-page.vue')
+      },
+      {
+        path: 'messageType-list-page',
+        name: 'messageType-list-page',
+        meta: {
+          icon: 'md-download',
+          title: '消息类型列表'
+        },
+        component: () => import('@/view/messageType/messageType-list-page.vue')
+      }
+    ]
+  },
+  {
     path: '/coupon',
     name: 'coupon',
     meta: {
